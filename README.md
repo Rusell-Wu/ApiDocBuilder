@@ -104,4 +104,6 @@ https://blog.csdn.net/baiihcy/article/details/53861267
 
 https://gitee.com/l0km/javadocreader
 
+https://jetbrains.org/intellij/sdk/docs/intro/welcome.html
+
 
