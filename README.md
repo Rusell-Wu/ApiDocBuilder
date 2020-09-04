@@ -9,6 +9,12 @@
 ## 实现原理
 jdk安装目录下lib文件夹中的tools.jar提供了java doc读取的api，javadoc 在 jdk 目录下只是一个可执行程序，但是这个可执行程序是基于 jdk 的 tools.jar 的一个封装，也就是说 javadoc 实现在 tools.jar 中，借由javadoc可以获取源码几乎所有的信息，类名、类变量、类方法、方法参数、注解、javadoc注释等都可以获取到，然后根据自己的需要把关心的信息输出成自定的格式。
 
+## 使用方法
+* 拉取html-dist文件夹内的打包资源文件，并在服务器根目录下创建一个doc文件夹，将拉取资源文件上传到服务器doc目录下，最终文档的访问链接为:http://服务器ip/doc
+- 拉取plugin文件夹内的插件jar包，打开idea插件管理界面，选择从磁盘安装，安装完成后重启生效
+* 重启后，会在Tools菜单栏出现一个Build ApiDoc的菜单项，点击即可生成文档json文件，生成路径为：项目路径/build/libs/apiList.json，其实就是jar包的打包路径
+- 将生成的apiList.json放到服务器doc目录下，在浏览器打开文档链接即可渲染。
+
 ## 接口注释规则
 
 ### 请求参数
