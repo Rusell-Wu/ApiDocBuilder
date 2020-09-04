@@ -51,7 +51,7 @@ jdk安装目录下lib文件夹中的tools.jar提供了java doc读取的api，jav
 ```Java
  /**
      * 用户端加入购物车
-     * @param shoppingCart required:goodsSku.id,num
+     * @param shoppingCart required:goodsSku.id,goodsSku.skuInfo,num
      */
     @RestMethod
     public void addShoppingCart(ShoppingCart shoppingCart){
@@ -59,7 +59,7 @@ jdk安装目录下lib文件夹中的tools.jar提供了java doc读取的api，jav
     }
 ```
 
-对于请求参数有多级的情况，直接用“.”连接，如果为List类型，则直接以泛型对象为准，例如：
+上述代码中，shoppingCart里面有个对象为goodsSku，需要传shoppingCart里面的goodsSku对象,并只传里面的id和skuInfo两个字段，直接用“.”连接，如果为List类型，则直接以泛型对象为准，例如：
 
 ```Java
  /**
