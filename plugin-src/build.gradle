@@ -1,0 +1,35 @@
+
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.4.21'
+}
+
+group 'com.rq'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    maven{ url'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven{ url'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+}
+
+dependencies {
+    implementation fileTree(dir:'libs',includes:['*jar'])
+    implementation group: 'com.google.guava', name:'guava',version: '29.0-jre'
+    implementation group: 'com.alibaba',name: 'fastjson',version: '1.2.61'
+}
+
+jar {
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+intellij {
+    version '2018.3.6'
+    intellij.updateSinceUntilBuild false
+}
+patchPluginXml {
+    changeNotes """
+      The first version.<br>
+      """
+}

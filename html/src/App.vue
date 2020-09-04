@@ -52,7 +52,7 @@
 
 <script>
   //测试时将json文件放到data文件夹
-  //const moduleList = require("./data/data.json");
+  //const moduleList = require("./data/apiList.json");
   import apiDetail from "./components/apiDetail";
   import authDialog from "./components/authDialog";
   import axios from 'axios'
@@ -105,7 +105,7 @@
       }
     },
     mounted() {
-      //发布时将json文件放到与index.html同级目录下
+      //打包发布时将json文件放到与index.html同级目录下
       let _t=this;
       axios.get('/doc/apiList.json').then(function(res){
         _t.moduleList = res.data;
@@ -230,6 +230,6 @@
   }
 
   .el-menu{
-    border: none;
+    border: none !important;
   }
 </style>

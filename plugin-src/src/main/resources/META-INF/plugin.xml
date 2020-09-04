@@ -1,0 +1,26 @@
+<idea-plugin>
+    <id>com.rq.apidoc</id>
+    <name>Logan Api Doc Builder</name>
+    <vendor email="oxygen668@foxmail.com" url="https://tebiezan.cn">RQ software</vendor>
+
+    <description><![CDATA[
+    The api builder for longan framework.<br>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="com.rq.apidoc" class="com.rq.apidoc.action.ApiDocBuildAction" text="Build ApiDoc" description="build api doc">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
