@@ -18,7 +18,8 @@ public class ApiBuilder {
         String modelPath=sourcePath+"/"+servicePackage.replaceAll("\\.","/").replace("service","model");
         DocUtil docUtil=new DocUtil(modelPath,classpath);
         List<Module> moduleList=new ArrayList<>();
-        for(ClassDoc classDoc:rootDoc.classes()){
+        ClassDoc[] classes = rootDoc.classes();
+        for(ClassDoc classDoc:classes){
             if(progressIndicator.isCanceled()){
                 break;
             }

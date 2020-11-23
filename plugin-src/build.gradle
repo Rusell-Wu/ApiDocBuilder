@@ -4,6 +4,11 @@ plugins {
     id 'org.jetbrains.intellij' version '0.4.21'
 }
 
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 group 'com.rq'
 version '1.0'
 

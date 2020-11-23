@@ -39,59 +39,56 @@ public class ApiDocBuildAction extends AnAction {
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "正在生成接口文档") {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-                String servicePackage = PropertiesComponent.getInstance().getValue(projectName + ":servicePackage");
-                String sourcePath = PropertiesComponent.getInstance().getValue(projectName + ":sourcePath");
-                String jarPath = PropertiesComponent.getInstance().getValue(projectName + ":jarPath");
+                String servicePackage = null;
+                String sourcePath = null;
+                String jarPath = null;
 
-                if (servicePackage == null || sourcePath != null || jarPath != null) {
-
-                    String buildJarPath = project.getBasePath() + "/build/libs";
-                    File file = new File(buildJarPath);
-                    if (!file.exists()) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                Messages.showMessageDialog(project, "请先执行gradle jar命令生成项目jar文件！", "生成文档失败", Messages.getInformationIcon());
-                            }
-                        });
-                        return;
-                    }
-                    //搜索jar文件
-                    List<File> jarFiles = findFile(file, projectName, ".jar");
-                    if (jarFiles.isEmpty()) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                Messages.showMessageDialog(project, "请先执行gradle jar命令生成项目jar文件！", "生成文档失败", Messages.getInformationIcon());
-                            }
-                        });
-                        return;
-                    } else {
-                        jarPath = jarFiles.get(0).getAbsolutePath();
-                    }
-
-                    //搜索启动类文件
-                    List<File> files = searchFiles(new File(project.getBasePath() + "/src/main/java"), "Application.java");
-                    if (files.isEmpty()) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                Messages.showMessageDialog(project, "未找到启动类文件：Application.java", "生成文档失败", Messages.getInformationIcon());
-                            }
-                        });
-                        return;
-                    } else {
-                        servicePackage = getPackageName(files.get(0).getAbsolutePath().replace("Application.java", "service"));
-                    }
-                    sourcePath = project.getBasePath() + "/src/main/java";
-
-                    PropertiesComponent.getInstance().setValue(projectName + ":servicePackage", servicePackage);
-                    PropertiesComponent.getInstance().setValue(projectName + ":jarPath", jarPath);
-                    PropertiesComponent.getInstance().setValue(projectName + ":sourcePath", sourcePath);
+                String buildJarPath = project.getBasePath() + "/build/libs";
+                File file = new File(buildJarPath);
+                if (!file.exists()) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Messages.showMessageDialog(project, "请先执行gradle jar命令生成项目jar文件！", "生成文档失败", Messages.getInformationIcon());
+                        }
+                    });
+                    return;
+                }
+                //搜索jar文件
+                List<File> jarFiles = findFile(file, projectName, ".jar");
+                if (jarFiles.isEmpty()) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Messages.showMessageDialog(project, "请先执行gradle jar命令生成项目jar文件！", "生成文档失败", Messages.getInformationIcon());
+                        }
+                    });
+                    return;
+                } else {
+                    jarPath = jarFiles.get(0).getAbsolutePath();
                 }
 
+                //搜索service文件夹
+                List<File> files = findFolder(new File(project.getBasePath() + "/src/main/java"), "service");
+                if (files.isEmpty()) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Messages.showMessageDialog(project, "未找到service包", "生成文档失败", Messages.getInformationIcon());
+                        }
+                    });
+                    return;
+                }
+
+                sourcePath = project.getBasePath() + "/src/main/java";
+
+
                 try {
-                    List<Module> moduleList = ApiBuilder.create(servicePackage, jarPath, sourcePath,indicator);
+                    List<Module> moduleList = new ArrayList<>();
+                    for (File folder : files) {
+                        servicePackage = getPackageName(folder.getAbsolutePath());
+                        moduleList.addAll(ApiBuilder.create(servicePackage, jarPath, sourcePath,indicator));
+                    }
                     if(indicator.isCanceled()){
                         return;
                     }
@@ -203,5 +200,34 @@ public class ApiDocBuildAction extends AnAction {
         int index = applicationPath.indexOf("java");
         applicationPath=applicationPath.substring(index+5);
         return applicationPath.replaceAll("\\\\",".");
+    }
+
+    public static List<File> findFolder(File folder,final String folderName){
+        List<File> result = new ArrayList<File>();
+        if (folder.isDirectory() && folder.getName().equals(folderName)) {
+            result.add(folder);
+            return result;
+        }
+
+        File[] subFolders = folder.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                if(file.isDirectory()) {
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        if (subFolders != null) {
+            for (File file : subFolders) {
+                if(file.getName().equals(folderName)){
+                    result.add(file);
+                }else{
+                    result.addAll(findFolder(file,folderName));
+                }
+            }
+        }
+        return result;
     }
 }
